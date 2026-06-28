@@ -46,7 +46,7 @@ class OpenInPdslsPlugin extends Plugin {
       if (!uri) return;
       menu.addItem((item) =>
         item
-          .setTitle("Open in PDSls")
+          .setTitle("🔍 Open in PDSls")
           .setIcon("box")
           .onClick(() =>
             openPdslsModal(this.app, {
@@ -64,7 +64,7 @@ class OpenInPdslsPlugin extends Plugin {
       if (!did) return;
       menu.addItem((item) =>
         item
-          .setTitle("Open in PDSls")
+          .setTitle("🔍 Open in PDSls")
           .setIcon("box")
           .onClick(() =>
             openPdslsModal(this.app, {

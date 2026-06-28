@@ -1,7 +1,7 @@
 {
   "id": "open-in-pdsls",
   "name": "Open in PDSls",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Jython1415",
   "description": "Adds an \"Open in PDSls\" action to posts and profiles to inspect the raw atproto record."
 }

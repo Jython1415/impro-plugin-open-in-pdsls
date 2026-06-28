@@ -479,7 +479,7 @@ var OpenInPdslsPlugin = class extends Plugin {
       const uri = post?.uri;
       if (!uri) return;
       menu.addItem(
-        (item) => item.setTitle("Open in PDSls").setIcon("box").onClick(
+        (item) => item.setTitle("\u{1F50D} Open in PDSls").setIcon("box").onClick(
           () => openPdslsModal(this.app, {
             title: "View the raw atproto record for this post:",
             url: pdslsForUri(uri),
@@ -492,7 +492,7 @@ var OpenInPdslsPlugin = class extends Plugin {
       const did = profile?.did;
       if (!did) return;
       menu.addItem(
-        (item) => item.setTitle("Open in PDSls").setIcon("box").onClick(
+        (item) => item.setTitle("\u{1F50D} Open in PDSls").setIcon("box").onClick(
           () => openPdslsModal(this.app, {
             title: "Browse this account's atproto repository:",
             url: pdslsForRepo(did),

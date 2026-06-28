@@ -1,6 +1,6 @@
 {
   "name": "impro-plugin-open-in-pdsls",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "build": "esbuild src/main.js --bundle --format=cjs --outfile=main.js",

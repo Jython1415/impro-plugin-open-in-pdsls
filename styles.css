@@ -1,0 +1,30 @@
+.open-in-pdsls-desc {
+  margin: 0 0 8px;
+  color: var(--text-color-muted);
+  font-size: 14px;
+}
+.open-in-pdsls-uri {
+  display: block;
+  margin-bottom: 14px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--background-color-secondary, rgba(127, 127, 127, 0.08));
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+.open-in-pdsls-link {
+  display: inline-block;
+  text-decoration: none;
+}
+.open-in-pdsls-inline {
+  margin: 8px 16px 0;
+}
+.open-in-pdsls-inline-link {
+  font-size: 13px;
+  color: var(--accent-color, #3b82f6);
+  text-decoration: none;
+}
+.open-in-pdsls-inline-link:hover {
+  text-decoration: underline;
+}

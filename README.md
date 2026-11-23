@@ -13,9 +13,10 @@ raw atproto record on [pdsls.dev](https://pdsls.dev).
 
 Each of these can be turned off individually from the plugin's settings page.
 
-Links open in a new tab via Impro's external-link confirmation. The plugin
-requests **no permissions** — it makes no network calls of its own, it only
-builds pdsls URLs from data Impro already hands it.
+Links open straight in a new tab. The plugin requests one permission,
+`open: ["https://pdsls.dev/*"]`, which lets it open pdsls.dev links without
+Impro's "Leave this app?" confirmation. It makes no network calls of its own,
+it only builds pdsls URLs from data Impro already hands it.
 
 ## Install
 
@@ -26,17 +27,17 @@ https://github.com/Jython1415/impro-plugin-open-in-pdsls
 ```
 
 Impro reads `manifest.json` from `main`, then loads `main.js` from the git tag
-matching the manifest version (`0.1.0`). There are no permissions to approve.
+matching the manifest version. Impro asks you to approve opening links to
+pdsls.dev.
 
 ## How it works
 
 A built `main.js` runs in a sandboxed worker and talks to the host over RPC. This
 plugin uses three extension points: the `post-context-menu` and
 `profile-context-menu` events (to add the menu item) and a `registerSlot` UI slot
-(`post-thread-view:after-main`, for the inline link). Because the worker has no
-`window`, the context-menu action opens a small modal containing the link rather
-than navigating directly — the host turns that `<a>` into a `target="_blank"`
-external link.
+(`post-thread-view:after-main`, for the inline link). The menu items use
+`MenuItem.setUrl`, so Impro renders them as links and opens them in a new tab;
+the host checks every URL against the manifest's `open` permission.
 
 ## Build
 

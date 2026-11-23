@@ -1,6 +1,5 @@
 import {
   Plugin,
-  Modal,
   VirtualEl,
   PluginSettingTab,
   Setting,
@@ -39,31 +38,6 @@ function pdslsLogoIcon() {
     },
   });
   return svg;
-}
-
-// The plugin worker has no `window`, so it cannot navigate on its own. The only
-// way to open a URL is for the user to click a host-rendered <a>, which the host
-// forces to target="_blank" + rel="noopener" and routes through its external-link
-// confirmation. So a context-menu action opens a tiny modal containing that link.
-function openPdslsModal(app, { title, url, atUri }) {
-  const modal = new Modal();
-  modal.titleEl.setText("Open in PDSls");
-
-  modal.contentEl.createEl("p", {
-    cls: "open-in-pdsls-desc",
-    text: title,
-  });
-  modal.contentEl.createEl("code", {
-    cls: "open-in-pdsls-uri",
-    text: atUri,
-  });
-  modal.contentEl.createEl("a", {
-    cls: "open-in-pdsls-link rounded-button rounded-button-primary",
-    text: "Open in PDSls \u2197",
-    attr: { href: url },
-  });
-
-  modal.open();
 }
 
 class OpenInPdslsSettingTab extends PluginSettingTab {
@@ -118,13 +92,7 @@ class OpenInPdslsPlugin extends Plugin {
         item
           .setTitle("Open in PDSls")
           .setIcon(pdslsLogoIcon())
-          .onClick(() =>
-            openPdslsModal(this.app, {
-              title: "View the raw atproto record for this post:",
-              url: pdslsForUri(uri),
-              atUri: uri,
-            }),
-          ),
+          .setUrl(pdslsForUri(uri)),
       );
     });
 
@@ -137,13 +105,7 @@ class OpenInPdslsPlugin extends Plugin {
         item
           .setTitle("Open in PDSls")
           .setIcon(pdslsLogoIcon())
-          .onClick(() =>
-            openPdslsModal(this.app, {
-              title: "Browse this account's atproto repository:",
-              url: pdslsForRepo(did),
-              atUri: "at://" + did,
-            }),
-          ),
+          .setUrl(pdslsForRepo(did)),
       );
     });
 

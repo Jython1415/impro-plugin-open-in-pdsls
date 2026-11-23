@@ -3,5 +3,10 @@
   "name": "Open in PDSls",
   "version": "0.1.2",
   "author": "Jython1415",
-  "description": "Open a post or profile's raw atproto record in PDSls."
+  "description": "Open a post or profile's raw atproto record in PDSls.",
+  "permissions": {
+    "open": [
+      "https://pdsls.dev/*"
+    ]
+  }
 }

@@ -27,24 +27,6 @@ function pdslsLogoIcon() {
   });
   return svg;
 }
-function openPdslsModal(app, { title, url, atUri }) {
-  const modal = new import_impro_plugin.Modal();
-  modal.titleEl.setText("Open in PDSls");
-  modal.contentEl.createEl("p", {
-    cls: "open-in-pdsls-desc",
-    text: title
-  });
-  modal.contentEl.createEl("code", {
-    cls: "open-in-pdsls-uri",
-    text: atUri
-  });
-  modal.contentEl.createEl("a", {
-    cls: "open-in-pdsls-link rounded-button rounded-button-primary",
-    text: "Open in PDSls \u2197",
-    attr: { href: url }
-  });
-  modal.open();
-}
 var OpenInPdslsSettingTab = class extends import_impro_plugin.PluginSettingTab {
   constructor() {
     super();
@@ -86,13 +68,7 @@ var OpenInPdslsPlugin = class extends import_impro_plugin.Plugin {
       const uri = post?.uri;
       if (!uri) return;
       menu.addItem(
-        (item) => item.setTitle("Open in PDSls").setIcon(pdslsLogoIcon()).onClick(
-          () => openPdslsModal(this.app, {
-            title: "View the raw atproto record for this post:",
-            url: pdslsForUri(uri),
-            atUri: uri
-          })
-        )
+        (item) => item.setTitle("Open in PDSls").setIcon(pdslsLogoIcon()).setUrl(pdslsForUri(uri))
       );
     });
     this.app.on("profile-context-menu", (menu, profile) => {
@@ -100,13 +76,7 @@ var OpenInPdslsPlugin = class extends import_impro_plugin.Plugin {
       const did = profile?.did;
       if (!did) return;
       menu.addItem(
-        (item) => item.setTitle("Open in PDSls").setIcon(pdslsLogoIcon()).onClick(
-          () => openPdslsModal(this.app, {
-            title: "Browse this account's atproto repository:",
-            url: pdslsForRepo(did),
-            atUri: "at://" + did
-          })
-        )
+        (item) => item.setTitle("Open in PDSls").setIcon(pdslsLogoIcon()).setUrl(pdslsForRepo(did))
       );
     });
     this.registerSlot("post-thread-view:after-main", (context) => {

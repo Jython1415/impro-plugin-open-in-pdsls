@@ -1,5 +1,10 @@
 // src/main.js
 var import_impro_plugin = require("@impro.social/impro-plugin");
+var DEFAULT_SETTINGS = {
+  showPostMenuItem: true,
+  showProfileMenuItem: true,
+  showThreadLink: true
+};
 var PDSLS_BASE = "https://pdsls.dev/";
 function pdslsForUri(atUri) {
   return PDSLS_BASE + String(atUri);
@@ -40,9 +45,44 @@ function openPdslsModal(app, { title, url, atUri }) {
   });
   modal.open();
 }
+var OpenInPdslsSettingTab = class extends import_impro_plugin.PluginSettingTab {
+  constructor() {
+    super();
+    this.setName("Open in PDSls");
+  }
+  display() {
+    this.addToggleSetting(
+      "showPostMenuItem",
+      "Post menu item",
+      'Show "Open in PDSls" in the post context menu.'
+    );
+    this.addToggleSetting(
+      "showProfileMenuItem",
+      "Profile menu item",
+      'Show "Open in PDSls" in the profile context menu.'
+    );
+    this.addToggleSetting(
+      "showThreadLink",
+      "Link under post",
+      'Show the "Open in PDSls" link beneath the focused post in the thread view.'
+    );
+  }
+  addToggleSetting(key, name, desc) {
+    new import_impro_plugin.Setting(this.containerEl).setName(name).setDesc(desc).addToggle(
+      (toggle) => toggle.setValue(this.plugin.settings[key]).onChange(async (value) => {
+        this.plugin.settings[key] = value;
+        await this.plugin.saveData(this.plugin.settings);
+      })
+    );
+  }
+};
 var OpenInPdslsPlugin = class extends import_impro_plugin.Plugin {
-  onload() {
+  async onload() {
+    const saved = await this.loadData();
+    this.settings = { ...DEFAULT_SETTINGS, ...saved ?? {} };
+    this.addSettingTab(new OpenInPdslsSettingTab());
     this.app.on("post-context-menu", (menu, post) => {
+      if (!this.settings.showPostMenuItem) return;
       const uri = post?.uri;
       if (!uri) return;
       menu.addItem(
@@ -56,6 +96,7 @@ var OpenInPdslsPlugin = class extends import_impro_plugin.Plugin {
       );
     });
     this.app.on("profile-context-menu", (menu, profile) => {
+      if (!this.settings.showProfileMenuItem) return;
       const did = profile?.did;
       if (!did) return;
       menu.addItem(
@@ -69,6 +110,7 @@ var OpenInPdslsPlugin = class extends import_impro_plugin.Plugin {
       );
     });
     this.registerSlot("post-thread-view:after-main", (context) => {
+      if (!this.settings.showThreadLink) return null;
       const uri = context?.uri;
       if (!uri) return null;
       const wrap = new import_impro_plugin.VirtualEl("div");

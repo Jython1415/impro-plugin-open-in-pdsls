@@ -1,4 +1,16 @@
-import { Plugin, Modal, VirtualEl } from "@impro.social/impro-plugin";
+import {
+  Plugin,
+  Modal,
+  VirtualEl,
+  PluginSettingTab,
+  Setting,
+} from "@impro.social/impro-plugin";
+
+const DEFAULT_SETTINGS = {
+  showPostMenuItem: true,
+  showProfileMenuItem: true,
+  showThreadLink: true,
+};
 
 // PDSls renders any at:// identifier straight from the source PDS:
 //   record  -> https://pdsls.dev/at://<did>/<collection>/<rkey>
@@ -54,10 +66,52 @@ function openPdslsModal(app, { title, url, atUri }) {
   modal.open();
 }
 
+class OpenInPdslsSettingTab extends PluginSettingTab {
+  constructor() {
+    super();
+    this.setName("Open in PDSls");
+  }
+
+  display() {
+    this.addToggleSetting(
+      "showPostMenuItem",
+      "Post menu item",
+      'Show "Open in PDSls" in the post context menu.',
+    );
+    this.addToggleSetting(
+      "showProfileMenuItem",
+      "Profile menu item",
+      'Show "Open in PDSls" in the profile context menu.',
+    );
+    this.addToggleSetting(
+      "showThreadLink",
+      "Link under post",
+      'Show the "Open in PDSls" link beneath the focused post in the thread view.',
+    );
+  }
+
+  addToggleSetting(key, name, desc) {
+    new Setting(this.containerEl)
+      .setName(name)
+      .setDesc(desc)
+      .addToggle((toggle) =>
+        toggle.setValue(this.plugin.settings[key]).onChange(async (value) => {
+          this.plugin.settings[key] = value;
+          await this.plugin.saveData(this.plugin.settings);
+        }),
+      );
+  }
+}
+
 class OpenInPdslsPlugin extends Plugin {
-  onload() {
+  async onload() {
+    const saved = await this.loadData();
+    this.settings = { ...DEFAULT_SETTINGS, ...(saved ?? {}) };
+    this.addSettingTab(new OpenInPdslsSettingTab());
+
     // 1) Post context menu — works anywhere a post appears (feed, thread, etc.)
     this.app.on("post-context-menu", (menu, post) => {
+      if (!this.settings.showPostMenuItem) return;
       const uri = post?.uri;
       if (!uri) return;
       menu.addItem((item) =>
@@ -76,6 +130,7 @@ class OpenInPdslsPlugin extends Plugin {
 
     // 2) Profile context menu — opens the account's repo root.
     this.app.on("profile-context-menu", (menu, profile) => {
+      if (!this.settings.showProfileMenuItem) return;
       const did = profile?.did;
       if (!did) return;
       menu.addItem((item) =>
@@ -94,6 +149,7 @@ class OpenInPdslsPlugin extends Plugin {
 
     // 3) One-click inline link in the thread view, beneath the focused post.
     this.registerSlot("post-thread-view:after-main", (context) => {
+      if (!this.settings.showThreadLink) return null;
       const uri = context?.uri;
       if (!uri) return null;
       const wrap = new VirtualEl("div");

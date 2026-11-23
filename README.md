@@ -11,6 +11,8 @@ raw atproto record on [pdsls.dev](https://pdsls.dev).
 - **In the thread view**, a one-click "🔍 Open in PDSls ↗" link appears beneath
   the focused post.
 
+Each of these can be turned off individually from the plugin's settings page.
+
 Links open in a new tab via Impro's external-link confirmation. The plugin
 requests **no permissions** — it makes no network calls of its own, it only
 builds pdsls URLs from data Impro already hands it.
